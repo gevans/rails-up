@@ -1,39 +1,85 @@
 require 'thor'
+require 'active_support/core_ext/string'
 require 'fileutils'
 
 class RailsUp < Thor
-  autoload :Version, "rails-up/version"
+  autoload :Version,    "rails-up/version"
+  autoload :Components, "rails-up/components"
 
-  desc "init", "Creates a new Vagrant file and copies cookbooks to current path"
-  def init
-    require "fileutils"
+  include Thor::Actions
 
-    FileUtils.cp(
-      File.join(RailsUp.templates_path, "Vagrantfile"),
-      File.join(RailsUp.project_path, "Vagrantfile")
-    )
-    puts "Created: Vagrantfile"
-
-    FileUtils.cp_r(
-      File.join(RailsUp.templates_path, "chef"),
-      File.join(RailsUp.project_path, "chef")
-    )
-    puts "Created: chef/"
+  def initialize(*args)
+    super
+    RailsUp::Components.load_components!
   end
 
-  desc "version", "Shows current rails-up version"
+  def help(task=nil, subcommand=false)
+    super
+
+    if task.nil? || task == "init"
+      say if task == "init"
+      components_listing
+    end
+  end
+
+  desc "init [COMPONENTS ...]", "Creates a new Vagrantfile and copies cookbooks to current path"
+  method_option "root", :default => ".", :aliases => "-r", :type => :string, :desc => "Project root"
+  # method_option "box", :default => "lucid32", :desc => "Vagrant box name to use"
+  # method_option "box-url", :default => "http://files.vagrantup.com/lucid32.box", :desc => "URL to specified Vagrant box"
+  def init(*components)
+    if components.empty?
+      say "Please specify components to use", :yellow
+      return help("init")
+    end
+
+    components.each do |c|
+      if !RailsUp::Components.mappings.has_key?(c)
+        say "Component is not loaded or does not exist: #{c}", :red
+        return
+      end
+    end
+  end
+
+  desc "-v, version", "Shows current rails-up version"
   def version
-    puts "rails-up #{RailsUp::Version::STRING}"
+    say "rails-up #{RailsUp::Version::STRING}"
   end
   map "-v" => "version"
 
   class << self
     def project_path
-      @_project_path ||= FileUtils.pwd
+      @project_path ||= FileUtils.pwd
     end
 
     def templates_path
-      @_templates_path ||= File.expand_path("#{File.dirname(__FILE__)}/../templates")
+      @templates_path ||= File.expand_path("#{File.dirname(__FILE__)}/../templates")
     end
-  end # self
+
+    def cookbooks_path
+      @cookbooks_path ||= File.expand_path("#{project_path}/chef/cookbooks")
+    end
+
+    def roles_path
+      @cookbooks_path ||= File.expand_path("#{project_path}/chef/roles")
+    end
+
+    def component(&block)
+      builder = RailsUp::Components::DefinitionBuilder.new(&block)
+      builder.build
+    end
+  end
+
+  protected
+
+    def components_listing
+      components = ActiveSupport::OrderedHash.new
+      RailsUp::Components.mappings.each do |name, cm|
+        components["  #{name}"] = "# #{cm.summary}"
+      end
+
+      say "Components: "
+      say
+      print_table(components, :indent => 2, :truncate => true)
+    end
+
 end # RailsUp

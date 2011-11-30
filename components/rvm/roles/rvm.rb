@@ -1,6 +1,6 @@
 name "rvm"
 
-  description "Provisions Vagrant boxes with RVM for managing Rubies system-wide and per-user."
+  description "Provisions Vagrant boxes with RVM for managing Rubies system-wide and per-user"
 
   run_list "recipe[rvm::system]", "recipe[rvm::vagrant]"
 

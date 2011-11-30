@@ -5,6 +5,7 @@ source :rubygems
 #   gem "activesupport", ">= 2.3.5"
 gem "thor", "~> 0.14.6"
 gem "vagrant", ">= 0.8.7"
+gem "activesupport", ">= 2.3.5"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
