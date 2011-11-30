@@ -1,14 +1,9 @@
 #!/usr/bin/env ruby
+require 'rubygems' unless defined?(Gem)
+require 'bundler/setup' if File.exist?("Gemfile")
 
-require "rubygems"
-require "fileutils"
+lib = File.expand_path('../../lib', __FILE__)
+$:.unshift(lib) if File.directory?(lib) && !$:.include?(lib)
 
-puts "Created: Vagrantfile"
-FileUtils.cp(
-  File.join(File.dirname(__FILE__), "../templates/Vagrantfile"),
-  File.join(FileUtils.pwd, "Vagrantfile"))
-
-puts "Created: chef/"
-FileUtils.cp_r(
-  File.join(File.dirname(__FILE__), "../templates/chef"),
-  File.join(FileUtils.pwd, "chef"))
+require 'rails-up'
+RailsUp.start(ARGV)
