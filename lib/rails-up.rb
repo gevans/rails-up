@@ -32,6 +32,10 @@ class RailsUp < Thor
       return help("init")
     end
 
+    if options.root?
+      RailsUp.project_root = options[:root]
+    end
+
     components.each do |c|
       if !RailsUp::Components.mappings.has_key?(c)
         say "Component is not loaded or does not exist: #{c}", :red
@@ -47,8 +51,12 @@ class RailsUp < Thor
   map "-v" => "version"
 
   class << self
-    def project_path
-      @project_path ||= FileUtils.pwd
+    def project_root
+      @project_root ||= FileUtils.pwd
+    end
+
+    def project_root=(path)
+      @project_root = File.expand_path(path)
     end
 
     def templates_path
