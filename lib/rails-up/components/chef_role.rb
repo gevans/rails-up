@@ -22,8 +22,8 @@ class RailsUp
         role += "description #{description.inspect}\n" if description
         role += array_to_args("run_list", run_list) + "\n" if run_list
         role += array_to_args("env_run_lists", env_run_lists) + "\n" if env_run_lists
-        role += "default_attributes #{default_attributes.inspect}\n" if default_attributes
-        role += "override_attributes #{override_attributes.inspect}\n" if override_attributes
+        role += "default_attributes(#{default_attributes.inspect})\n" if default_attributes
+        role += "override_attributes(#{override_attributes.inspect})\n" if override_attributes
         role
       end
 
