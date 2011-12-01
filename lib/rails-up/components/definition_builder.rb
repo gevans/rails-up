@@ -13,7 +13,7 @@ class RailsUp
       end
 
       def name(value)
-        @definition.name = value
+        @definition.name = value.to_s
       end
 
       def version(value)
@@ -30,6 +30,16 @@ class RailsUp
 
       def roles(*value)
         @definition.roles = value
+      end
+
+      def cookbook(name, value={})
+        @definition.cookbooks[name] = value
+      end
+
+      def role(name, &block)
+        role = Components::ChefRoleBuilder.new(&block)
+        role.name = name
+        @definition.roles << role.build
       end
 
     end # DefinitionBuilder

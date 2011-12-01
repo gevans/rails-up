@@ -4,6 +4,8 @@ source :rubygems
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 gem "thor", "~> 0.14.6"
+gem "librarian", "~> 0.0.12"
+gem "chef", "~> 0.10.6.rc.3"
 gem "vagrant", ">= 0.8.7"
 gem "activesupport", ">= 2.3.5"
 
