@@ -1,6 +1,5 @@
 require 'thor'
 require 'active_support/core_ext/string'
-require 'fileutils'
 
 class RailsUp < Thor
   autoload :Version,    "rails-up/version"
