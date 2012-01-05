@@ -1,6 +1,6 @@
 class RailsUp
   module Components
-    class ChefRole
+    class Role
 
       attr_accessor :name,
                     :description,
@@ -27,6 +27,20 @@ class RailsUp
         role
       end
 
+      def valid?
+        begin
+          validate
+          true
+        rescue RoleDefinitionError => e
+          false
+        end
+      end
+
+      def validate
+        raise RoleDefinitionError, "Role name is required" if name.nil? || name.empty?
+        # raise RoleDefinitionError, "Role description is required" if description.nil? || description.empty?
+      end
+
       private
 
         def array_to_args(method, array=[])
@@ -39,6 +53,6 @@ class RailsUp
           "#{method}#{args}"
         end
 
-    end # Definition
+    end # Role
   end # Components
 end # RailsUp

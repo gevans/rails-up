@@ -1,19 +1,20 @@
 class RailsUp
   module Components
-    class ChefRoleBuilder
+    class RoleBuilder
 
       def initialize(&block)
         @block = block
-        @definition = Components::ChefRole.new
+        @definition = Components::Role.new
       end
 
       def build
         instance_eval(&@block)
+        @definition.validate
         @definition
       end
 
       def name=(value)
-        value = value.to_sym if value.is_a?(String)
+        value = value
         @definition.name = value
       end
 

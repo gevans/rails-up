@@ -33,7 +33,7 @@ class RailsUp
             cookbooks << param
           end
         end
-        append_to_file "#{RailsUp.chef_root}/Cheffile", cookbooks.join("\n")
+        append_to_file "#{RailsUp.project_root}/#{RailsUp.chef_root}/Cheffile", cookbooks.join("\n")
       end
 
       def copy_roles(component)
@@ -42,8 +42,8 @@ class RailsUp
         directory component.roles_path, RailsUp.roles_path if component.roles_path?
 
         component.roles.each do |r|
-          if r.is_a?(Components::ChefRole)
-            create_file "#{RailsUp.roles_path}/#{r.name}.rb", r.to_s
+          if r.is_a?(Components::Role)
+            create_file "#{RailsUp.project_root}/#{RailsUp.roles_path}/#{r.name}.rb", r.to_s
           end
         end
       end

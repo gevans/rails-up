@@ -3,10 +3,8 @@ require 'active_support/ordered_hash'
 class RailsUp
   module Components
 
-    autoload :ChefRole,          "rails-up/components/chef_role"
-    autoload :ChefRoleBuilder,   "rails-up/components/chef_role_builder"
-    autoload :Definition,        "rails-up/components/definition"
-    autoload :DefinitionBuilder, "rails-up/components/definition_builder"
+    autoload :Role, "rails-up/components/role"
+    autoload :RoleBuilder, "rails-up/components/role_builder"
 
     class << self
       def mappings
@@ -14,7 +12,7 @@ class RailsUp
       end
 
       ##
-      # Attempts to load all components in the load path.
+      # Attempts to require all components in the load path.
       # Awesome snippet repurposed from https://github.com/redcar/plugin_manager
       def load_components!
         $LOAD_PATH.each do |base|
@@ -31,7 +29,7 @@ class RailsUp
               end
 
               if RailsUp::Components.mappings.has_key?(definition.name)
-                # TODO: Detect versions
+                # TODO: Detect/differentiate versions of multiple components
                 puts "Skipped duplicate component definition: #{file}"
               else
                 RailsUp::Components.mappings[definition.name] = definition

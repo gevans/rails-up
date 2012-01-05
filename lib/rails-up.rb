@@ -2,9 +2,14 @@ require 'thor'
 require 'active_support/core_ext/string'
 
 class RailsUp < Thor
-  autoload :Version,    "rails-up/version"
+
+  autoload :Version, "rails-up/version"
+  autoload :Component, "rails-up/component"
+  autoload :ComponentBuilder, "rails-up/component_builder"
   autoload :Components, "rails-up/components"
-  autoload :Actions,    "rails-up/actions"
+  autoload :Actions, "rails-up/actions"
+
+  require "rails-up/errors"
 
   include Thor::Actions
   include RailsUp::Actions
@@ -27,15 +32,15 @@ class RailsUp < Thor
 
   desc "init [COMPONENTS ...]", "Creates a new Vagrantfile and copies cookbooks to current path"
   method_option "root", :default => ".", :aliases => "-r", :type => :string, :desc => "Project root"
+  method_option "box", :default => "base", :aliases => "-b", :type => :string, :desc => "Vagrant box"
+  method_option "url", :type => :string, :desc => "Vagrant box URL"
   def init(*args)
     if args.empty?
       say "Please specify components to use", :yellow
       return help("init")
     end
 
-    if options.root?
-      RailsUp.project_root = options[:root]
-    end
+    RailsUp.project_root = options[:root] if options.root?
 
     components = []
     args.each do |c|
@@ -50,20 +55,17 @@ class RailsUp < Thor
     boot_after_create = yes?("Start Vagrant box afterward? [y/N]")
 
     say "Creating Vagrantfile..."
-    template "Vagrantfile.tt", "#{RailsUp.project_root}/Vagrantfile"
+    template "Vagrantfile.tt", "#{RailsUp.project_root}/Vagrantfile", vagrantfile_options(components, options[:box], options[:url])
 
-    say "Creating chef directory..."
-    empty_directory RailsUp.chef_root
-    empty_directory RailsUp.cookbooks_path
-    empty_directory RailsUp.roles_path
-    copy_file "Cheffile", "#{RailsUp.chef_root}/Cheffile"
+    say "Creating Cheffile..."
+    copy_file "Cheffile", "#{RailsUp.project_root}/#{RailsUp.chef_root}/Cheffile"
 
     components.each do |c|
       install_component(c)
     end
 
     say "Bundling cookbooks from Cheffile"
-    inside RailsUp.chef_root do
+    inside "#{RailsUp.project_root}/#{RailsUp.chef_root}" do
       run "bundle exec librarian-chef install"
     end
 
@@ -82,13 +84,36 @@ class RailsUp < Thor
   end
   map "-v" => "version"
 
-  class << self
-    def project_root
-      @project_root ||= FileUtils.pwd
+  protected
+
+    def components_listing
+      components = ActiveSupport::OrderedHash.new
+      RailsUp::Components.mappings.each do |name, cm|
+        components["  #{name}"] = "# #{cm.summary}"
+      end
+
+      say "Components: "
+      say
+      print_table(components, :indent => 2, :truncate => true)
     end
 
-    def project_root=(path)
-      @project_root = File.expand_path(path)
+    def vagrantfile_options(components, box_name, box_url)
+      {
+        :cookbooks_path => RailsUp.cookbooks_path,
+        :roles_path     => RailsUp.roles_path,
+        :components     => components,
+        :box_name       => box_name,
+        :box_url        => box_url
+      }
+    end
+
+  class << self
+    def project_root
+      @project_root ||= '.'
+    end
+
+    def project_root=(root)
+      @project_root = root
     end
 
     def destination_root
@@ -104,7 +129,7 @@ class RailsUp < Thor
     end
 
     def chef_root
-      @chef_root ||= "#{project_root}/chef"
+      @chef_root ||= "chef"
     end
 
     def cookbooks_path
@@ -116,22 +141,9 @@ class RailsUp < Thor
     end
 
     def component(&block)
-      builder = RailsUp::Components::DefinitionBuilder.new(&block)
+      builder = RailsUp::ComponentBuilder.new(&block)
       builder.build
     end
   end
-
-  protected
-
-    def components_listing
-      components = ActiveSupport::OrderedHash.new
-      RailsUp::Components.mappings.each do |name, cm|
-        components["  #{name}"] = "# #{cm.summary}"
-      end
-
-      say "Components: "
-      say
-      print_table(components, :indent => 2, :truncate => true)
-    end
 
 end # RailsUp
