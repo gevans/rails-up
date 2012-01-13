@@ -13,21 +13,16 @@ RailsUp.component do
   role "rvm" do
     run_list "recipe[rvm::system]", "recipe[rvm::vagrant]"
 
-    default_attributes(
+    default_attributes \
       :rvm => {
-        :upgrade      => "head",
-        :default_ruby => "1.9.2",
-        :rubies       => ["1.9.2"],
+        :upgrade      => "latest",
+        :default_ruby => "1.9.3",
+        :rubies       => ["1.9.3"],
         :rvmrc        => {
           :rvm_project_rvmrc             => 1,
           :rvm_gemset_create_on_use_flag => 1,
           :rvm_trust_rvmrcs_flag         => 1
-        },
-        :global_gems  => [
-          { :name => "bundler" }
-        ],
-        :group_users  => ["vagrant"],
+        }
       }
-    )
   end
 end
