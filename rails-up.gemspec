@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Russ Smith", "Gabriel Evans"]
-  s.date = "2011-12-09"
+  s.date = "2012-01-13"
   s.description = "Automatic vagrant box for your rails project."
   s.email = ["russ@bashme.org", "gabriel@codeconcoction.com"]
   s.executables = ["rails-up"]
@@ -24,16 +24,30 @@ Gem::Specification.new do |s|
     ".rvmrc",
     "Gemfile",
     "Gemfile.lock",
+    "Guardfile",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
     "bin/rails-up",
+    "components/apt_component.rb",
+    "components/mongodb_component.rb",
+    "components/redis_component.rb",
     "components/rvm_component.rb",
     "lib/rails-up.rb",
     "lib/rails-up/actions.rb",
+    "lib/rails-up/component.rb",
+    "lib/rails-up/component_builder.rb",
     "lib/rails-up/components.rb",
+    "lib/rails-up/components/role.rb",
+    "lib/rails-up/components/role_builder.rb",
+    "lib/rails-up/errors.rb",
     "lib/rails-up/version.rb",
+    "rails-up.gemspec",
+    "spec/component_builder_spec.rb",
+    "spec/component_spec.rb",
+    "spec/components/role_spec.rb",
+    "spec/components_spec.rb",
     "spec/rails-up_spec.rb",
     "spec/spec_helper.rb",
     "templates/Cheffile",
@@ -165,7 +179,7 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<thor>, ["~> 0.14.6"])
       s.add_runtime_dependency(%q<librarian>, ["~> 0.0.12"])
-      s.add_runtime_dependency(%q<chef>, ["~> 0.10.6.rc.3"])
+      s.add_runtime_dependency(%q<chef>, [">= 0.10.8"])
       s.add_runtime_dependency(%q<vagrant>, [">= 0.8.7"])
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.5"])
       s.add_development_dependency(%q<rspec>, ["~> 2.7.0"])
@@ -182,7 +196,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<thor>, ["~> 0.14.6"])
       s.add_dependency(%q<librarian>, ["~> 0.0.12"])
-      s.add_dependency(%q<chef>, ["~> 0.10.6.rc.3"])
+      s.add_dependency(%q<chef>, [">= 0.10.8"])
       s.add_dependency(%q<vagrant>, [">= 0.8.7"])
       s.add_dependency(%q<activesupport>, [">= 2.3.5"])
       s.add_dependency(%q<rspec>, ["~> 2.7.0"])
@@ -200,7 +214,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<thor>, ["~> 0.14.6"])
     s.add_dependency(%q<librarian>, ["~> 0.0.12"])
-    s.add_dependency(%q<chef>, ["~> 0.10.6.rc.3"])
+    s.add_dependency(%q<chef>, [">= 0.10.8"])
     s.add_dependency(%q<vagrant>, [">= 0.8.7"])
     s.add_dependency(%q<activesupport>, [">= 2.3.5"])
     s.add_dependency(%q<rspec>, ["~> 2.7.0"])
