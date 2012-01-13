@@ -52,7 +52,7 @@ class RailsUp
 
     def validate
       raise RailsUp::ComponentDefinitionError, "Name is required" if name.nil? || name.empty?
-      raise RailsUp::ComponentDefinitionError, "Version is required" if version.nil? || version.empty?
+      raise RailsUp::ComponentDefinitionError, "Version is required" if version.nil? || version.version.empty?
     end
 
   end # Component

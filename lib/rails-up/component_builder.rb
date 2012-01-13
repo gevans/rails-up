@@ -17,7 +17,7 @@ class RailsUp
     end
 
     def version(value)
-      @definition.version = value
+      @definition.version = Gem::Version.new(value)
     end
 
     def summary(value)

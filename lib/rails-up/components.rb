@@ -15,31 +15,34 @@ class RailsUp
       # Attempts to require all components in the load path.
       # Awesome snippet repurposed from https://github.com/redcar/plugin_manager
       def load_components!
-        $LOAD_PATH.each do |base|
-          definition_files = Dir[File.join(File.expand_path("#{base}/.."), "components", "{*/component.rb,*_component.rb}")]
-          definition_files.each do |file|
-            begin
-              definition = instance_eval(File.read(file))
+        definition_files = $LOAD_PATH.collect do |base|
+          Dir[File.join(File.expand_path("#{base}/.."), "components", "{*/component.rb,*_component.rb}")]
+        end
 
-              definition.definition_file = File.expand_path(file)
+        # Search ~/.rails-up for user components
+        definition_files << Dir[File.join(File.expand_path("#{ENV['HOME']}"), ".rails-up", "components", "{*/component.rb,*_component.rb}")]
 
-              if !definition.single_file?
-                definition.cookbooks_path = File.expand_path("#{File.dirname(file)}/cookbooks") if File.directory?("#{File.dirname(file)}/cookbooks")
-                definition.roles_path = File.expand_path("#{File.dirname(file)}/roles") if File.directory?("#{File.dirname(file)}/roles")
-              end
+        definition_files.flatten.each do |file|
+          begin
+            definition = instance_eval(File.read(file))
 
-              if RailsUp::Components.mappings.has_key?(definition.name)
-                # TODO: Detect/differentiate versions of multiple components
-                puts "Skipped duplicate component definition: #{file}"
-              else
-                RailsUp::Components.mappings[definition.name] = definition
-              end
-            rescue Object => e
-              puts "Unreadable component definition: #{file}"
-              puts "  " + e.message
-              puts e.backtrace.map {|l| "  " + l}
-              nil
+            definition.definition_file = File.expand_path(file)
+
+            if !definition.single_file?
+              definition.cookbooks_path = File.expand_path("#{File.dirname(file)}/cookbooks") if File.directory?("#{File.dirname(file)}/cookbooks")
+              definition.roles_path = File.expand_path("#{File.dirname(file)}/roles") if File.directory?("#{File.dirname(file)}/roles")
             end
+
+            if self.mappings.has_key?(definition.name) && self.mappings[definition.name].version >= definition.version
+              puts "Skipped duplicate component definition: #{file}"
+            else
+              self.mappings[definition.name] = definition
+            end
+          rescue Object => e
+            puts "Unreadable component definition: #{file}"
+            puts "  " + e.message
+            puts e.backtrace.map {|l| "  " + l}
+            nil
           end
         end
       end
