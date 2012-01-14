@@ -25,6 +25,10 @@ class RailsUp
       @cookbooks ||= {}
     end
 
+    def version=(value)
+      @version = Gem::Version.new(value)
+    end
+
     def cookbooks_path?
       !single_file? && cookbooks_path
     end

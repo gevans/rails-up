@@ -8,6 +8,7 @@ class RailsUp < Thor
   autoload :ComponentBuilder, "rails-up/component_builder"
   autoload :Components, "rails-up/components"
   autoload :Actions, "rails-up/actions"
+  autoload :Helpers, "rails-up/helpers"
 
   require "rails-up/errors"
 

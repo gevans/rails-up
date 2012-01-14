@@ -14,8 +14,15 @@ class RailsUp
       end
 
       def name=(value)
-        value = value
         @definition.name = value
+      end
+
+      def name(value)
+        @definition.name = value
+      end
+
+      def description(value)
+        @definition.description = value
       end
 
       def run_list(*value)

@@ -1,6 +1,7 @@
 class RailsUp
   module Components
     class Role
+      include Helpers
 
       attr_accessor :name,
                     :description,
@@ -38,20 +39,7 @@ class RailsUp
 
       def validate
         raise RoleDefinitionError, "Role name is required" if name.nil? || name.empty?
-        # raise RoleDefinitionError, "Role description is required" if description.nil? || description.empty?
       end
-
-      private
-
-        def array_to_args(method, array=[])
-          return if array.empty?
-          args = ""
-          array.compact.each_index do |i|
-            args += "," if i != 0
-            args += " #{array[i].inspect}"
-          end
-          "#{method}#{args}"
-        end
 
     end # Role
   end # Components

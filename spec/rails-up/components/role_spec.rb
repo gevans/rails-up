@@ -16,12 +16,6 @@ describe RailsUp::Components::Role do
     @role.valid?.should == false
   end
 
-  it "requires a description" do
-    @role.description = nil
-    lambda { @role.validate }.should raise_error(RailsUp::RoleDefinitionError, "Role description is required")
-    @role.valid?.should == false
-  end
-
   describe RailsUp::Components::RoleBuilder do
 
     it "creates a valid role" do
