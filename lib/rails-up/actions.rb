@@ -24,13 +24,18 @@ class RailsUp
             cookbooks << "\ncookbook #{k.inspect}"
           else
             cookbooks << "\ncookbook #{k.inspect},"
-          end
-          params = v.to_a
-          params_total = params.length
-          params.each_index do |i|
-            param  = "  :#{params[i][0]} => #{params[i][1].inspect}"
-            param += "," if i < params_total - 1
-            cookbooks << param
+
+            if v.is_a?(String)
+              cookbooks << " #{v.inspect}"
+            else
+              params = v.to_a
+              params_total = params.length - 1
+              params.each_index do |i|
+                param  = "  :#{params[i][0]} => #{params[i][1].inspect}"
+                param += "," if i < params_total
+                cookbooks << param
+              end
+            end
           end
         end
         append_to_file "#{RailsUp.project_root}/#{RailsUp.chef_root}/Cheffile", cookbooks.join("\n")
