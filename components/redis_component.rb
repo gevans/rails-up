@@ -12,5 +12,13 @@ RailsUp.component do
 
   role "redis" do
     run_list "recipe[redis::source]"
+
+    default_attributes \
+      :redis => {
+        :source => {
+          :version      => "2.4.5",
+          :tar_checksum => "babeb1a1d05281b5e00ca0a519cfc3f9"
+        }
+      }
   end
 end
