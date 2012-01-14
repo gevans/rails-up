@@ -9,4 +9,8 @@ RailsUp.component do
   summary "Apt cookbook with support for using apt cacher with chef-solo"
 
   cookbook "apt", :git => "git://github.com/fnichol/chef-apt.git", :ref => "cacher-client-solo-support"
+
+  role "apt" do
+    run_list "recipe[apt]"
+  end
 end
