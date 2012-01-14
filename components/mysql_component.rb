@@ -6,7 +6,7 @@ RailsUp.component do
 
   version "1.2.1"
 
-  summary "Provisions Vagrant boxes with RVM for managing Rubies system-wide and per-user"
+  summary 'Provisions Vagrant boxes with MySQL server and sets the root password to "vagrant"'
 
   cookbook "mysql", :git => "git://github.com/fnichol/chef-mysql.git", :ref => "all-fixes"
 
