@@ -39,8 +39,9 @@ end
 task :default => :spec
 
 require 'rdoc/task'
+require './lib/rails-up/version'
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
+  version = RailsUp::Version::STRING
 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "rails-up #{version}"
