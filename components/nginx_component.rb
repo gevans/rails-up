@@ -1,5 +1,5 @@
 #
-# Nginx cookbook component
+# Nginx component
 #
 RailsUp.component do
   name "nginx"

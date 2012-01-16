@@ -1,5 +1,5 @@
 #
-# MongoDB cookbook component
+# MongoDB component
 #
 RailsUp.component do
   name "mongodb"

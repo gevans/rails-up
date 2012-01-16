@@ -1,5 +1,5 @@
 #
-# Redis cookbook component
+# Redis component
 #
 RailsUp.component do
   name "redis"

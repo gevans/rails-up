@@ -1,5 +1,5 @@
 #
-# MySQL cookbook component
+# MySQL component
 #
 RailsUp.component do
   name "mysql"
