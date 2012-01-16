@@ -3,6 +3,7 @@ class RailsUp
     attr_accessor :name,
                   :version,
                   :summary,
+                  :forward_ports,
                   :roles,
                   :cookbooks,
                   :definition_file,
@@ -15,6 +16,10 @@ class RailsUp
 
     def inspect
       inspect1
+    end
+
+    def forward_ports
+      @forward_ports ||= {}
     end
 
     def roles

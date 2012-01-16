@@ -24,6 +24,10 @@ class RailsUp
       @definition.summary = value
     end
 
+    def forward_port(name, ports={})
+      @definition.forward_ports[name] = ports.flatten
+    end
+
     def roles(*value)
       @definition.roles = value
     end

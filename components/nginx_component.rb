@@ -10,6 +10,8 @@ RailsUp.component do
 
   cookbook "nginx", "0.99.2"
 
+  forward_port "nginx", 80 => 8080
+
   role "nginx" do
     run_list "recipe[nginx::source]"
 

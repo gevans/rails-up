@@ -99,10 +99,16 @@ class RailsUp < Thor
     end
 
     def vagrantfile_options(components, box_name, box_url)
+      forward_ports = {}
+      components.each do |c|
+        forward_ports.merge!(c.forward_ports)
+      end
+
       {
         :cookbooks_path => RailsUp.cookbooks_path,
         :roles_path     => RailsUp.roles_path,
         :components     => components,
+        :forward_ports  => forward_ports,
         :box_name       => box_name,
         :box_url        => box_url
       }
