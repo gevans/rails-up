@@ -4,11 +4,11 @@
 RailsUp.component do
   name "imagemagick"
 
-  version "1.2.1"
+  version "0.2.2"
 
   summary "Installs ImageMagick development and runtime packages (useful with RMagick and MiniMagick)"
 
-  cookbook "imagemagick"
+  cookbook "imagemagick", "0.2.2"
 
   role "imagemagick" do
     run_list "recipe[imagemagick::devel]"
